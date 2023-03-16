@@ -20,12 +20,18 @@ SELECT * FROM products order by price DESC LIMIT 1;
 SELECT COUNT(productid) AS amount_sold, name, price FROM all_sales group by name, price order by amount_sold DESC LIMIT 1;
 -- Problem 7
 -- Using a subquery, find all products that have a price higher than the average price for all products
+SELECT * FROM products WHERE price > (SELECT avg(price) FROM products) ORDER BY price;
 
 -- Problem 8
 -- Find the customer who spent the most money in purchased products
+SELECT customerID, SUM(price) AS amount_spent FROM all_sales GROUP BY customerID ORDER BY amount_spent DESC LIMIT 1;
+-- customerID 8241
 
 -- Problem 9
 -- Find the total number of sales for each sales person
+SELECT employeeID, firstname, lastname, SUM(quantity) AS pieces_sold FROM all_sales GROUP BY employeeID, firstname, lastname ORDER BY pieces_sold DESC;
 
 -- Problem 10
 -- Find the sales person who sold the most to the customer you found in Problem 8
+SELECT * FROM all_sales WHERE customerid = 8241;
+-- The query works for this problem because it seems like only one rep was selling to this customer. I want to figure out how to write a query that will group results by rep and count how many sales each rep had to that customer. Maybe a subquery that includes (SELECT COUNT(employeeid) AS rep_loyalty_score FROM all_sales GROUP BY employee_id) but I'm not sure exactly where to place it/what operator to use.
