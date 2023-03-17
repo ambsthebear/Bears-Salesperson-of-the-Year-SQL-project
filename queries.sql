@@ -11,7 +11,8 @@ SELECT * FROM all_sales;
 SELECT DISTINCT employeeID, firstname, lastname, avg(PRICE), avg(quantity) FROM all_sales group by employeeid, firstname, lastname order by avg(price) DESC;
 -- Problem 4
 -- Find the top three sales persons by total sales
-SELECT DISTINCT employeeID, firstname, lastname, avg(PRICE), avg(quantity) FROM all_sales group by employeeid, firstname, lastname order by avg(quantity) DESC LIMIT 3;
+-- SELECT DISTINCT employeeID, firstname, lastname, avg(PRICE), avg(quantity) FROM all_sales group by employeeid, firstname, lastname order by avg(quantity) DESC;
+SELECT DISTINCT employeeid, firstname, lastname, COUNT(distinct salesid) AS total_sales, sum(price) AS total_sold, sum(quantity) AS quantity_sold FROM all_sales GROUP BY employeeid, firstname, lastname ORDER BY total_sold DESC LIMIT 3;
 -- Problem 5
 -- Find the product that has the highest price
 SELECT * FROM products order by price DESC LIMIT 1;
@@ -42,3 +43,13 @@ SELECT DISTINCT customerid, COUNT(distinct employeeid) AS counted FROM all_sales
 -- I met with Pascal to review potential scenarios we could test this, and we found that customerid 15300 did have transactions with more than one employee. We knew which customerid to expect in our answer and worked together testing some queries until we came up with the query above
 -- SELECT DISTINCT customerid, employeeid FROM all_sales GROUP BY customerid HAVING COUNT(customerid) > 1;
 -- WHERE (SELECT COUNT(customerid) AS rep_count FROM all_sales GROUP BY employee_id) > 1
+
+-- Additional queries/notes for reporting purposes
+CREATE VIEW michel_sales AS SELECT * FROM all_sales WHERE employeeid = 4;
+SELECT SUM(price) as total_sold, SUM(quantity) as amount_sold FROM michel_sales;
+SELECT customerid, COUNT(salesid) as total_sales, avg(quantity) as avg_quantity_sold, avg(price) as avg_price_sold FROM michel_sales GROUP BY customerid;
+
+CREATE VIEW abraham_sales AS SELECT * FROM all_sales WHERE employeeid = 1;
+SELECT customerid, COUNT(salesid) as total_sales, avg(quantity) as avg_quantity_sold, avg(price) as avg_price_sold FROM abraham_sales GROUP BY customerid;
+
+SELECT DISTINCT productid, name, price, count(salesid) AS number_of_sales, sum(quantity) AS total_number_sold, sum(price) AS total_price_amount FROM all_sales GROUP BY productid, name, price;
