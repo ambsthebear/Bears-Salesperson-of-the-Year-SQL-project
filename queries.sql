@@ -33,5 +33,12 @@ SELECT employeeID, firstname, lastname, SUM(quantity) AS pieces_sold FROM all_sa
 
 -- Problem 10
 -- Find the sales person who sold the most to the customer you found in Problem 8
-SELECT * FROM all_sales WHERE customerid = 8241;
--- The query works for this problem because it seems like only one rep was selling to this customer. I want to figure out how to write a query that will group results by rep and count how many sales each rep had to that customer. Maybe a subquery that includes (SELECT COUNT(employeeid) AS rep_loyalty_score FROM all_sales GROUP BY employee_id) but I'm not sure exactly where to place it/what operator to use.
+SELECT DISTINCT firstname, lastname FROM all_sales WHERE customerid = 8241;
+
+-- PROBLEM 11 (diy BONUS with Pascal)
+SELECT DISTINCT customerid, COUNT(distinct employeeid) AS counted FROM all_sales GROUP BY customerid HAVING counted > 1;
+
+-- The query for problem 10 works because it seems like only one rep was selling to this customer. I want to figure out how to write a query that will group results by rep and count how many sales each rep had to that customer. Maybe a subquery that includes (SELECT COUNT(employeeid) AS rep_loyalty_score FROM all_sales GROUP BY employee_id) but I'm not sure exactly where to place it/what operator to use.
+-- I met with Pascal to review potential scenarios we could test this, and we found that customerid 15300 did have transactions with more than one employee. We knew which customerid to expect in our answer and worked together testing some queries until we came up with the query above
+-- SELECT DISTINCT customerid, employeeid FROM all_sales GROUP BY customerid HAVING COUNT(customerid) > 1;
+-- WHERE (SELECT COUNT(customerid) AS rep_count FROM all_sales GROUP BY employee_id) > 1
